@@ -5,7 +5,7 @@ namespace BuildersApp.Core.Services.Interfaces;
 public interface IUserIdentityService
 {
     public User? CurrentUser { get; }
-    public Task<bool> TrySetCurrentUser(string login);
-    public Task<bool> TryGetCurrentUser();
-    public Task Logout();
+    public Task<bool> TrySetCurrentUserAsync(string login);
+    public Task<bool> TryGetCurrentUserAsync();
+    public Task LogoutAsync();
 }

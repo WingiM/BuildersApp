@@ -4,7 +4,7 @@ namespace BuildersApp.Core.Services.Interfaces;
 
 public interface IAuthorizationService
 {
-    public Task<bool> Register(User user);
-    public Task<bool> Authorize(LoginCredentials loginCredentials);
-    public Task Logout();
+    public Task<bool> RegisterAsync(User user);
+    public Task<bool> AuthorizeAsync(LoginCredentials loginCredentials);
+    public Task LogoutAsync();
 }

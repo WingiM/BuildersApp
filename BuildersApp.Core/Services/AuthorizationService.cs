@@ -18,7 +18,7 @@ public class AuthorizationService : IAuthorizationService
         _identityService = identityService;
     }
 
-    public async Task<bool> Register(User user)
+    public async Task<bool> RegisterAsync(User user)
     {
         if (_repository.IsUserRegistered(user.Login))
         {
@@ -28,7 +28,7 @@ public class AuthorizationService : IAuthorizationService
         return await _repository.CreateUser(user);
     }
 
-    public async Task<bool> Authorize(LoginCredentials loginCredentials)
+    public async Task<bool> AuthorizeAsync(LoginCredentials loginCredentials)
     {
         if (!_repository.IsUserRegistered(loginCredentials.Login))
         {
@@ -38,12 +38,12 @@ public class AuthorizationService : IAuthorizationService
         var password = _repository.GetEncryptedPasswordByLogin(loginCredentials.Login);
         if (!_encryptionService.EncryptPassword(loginCredentials.Password).SequenceEqual(password))
             return false;
-        var res = await _identityService.TrySetCurrentUser(loginCredentials.Login);
+        var res = await _identityService.TrySetCurrentUserAsync(loginCredentials.Login);
         return res;
     }
 
-    public async Task Logout()
+    public async Task LogoutAsync()
     {
-        await _identityService.Logout();
+        await _identityService.LogoutAsync();
     }
 }

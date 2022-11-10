@@ -16,6 +16,7 @@ public static class ServiceExtension
         serviceCollection.AddSingleton(_ => new MongoConnection(mongoConnectionString, mongoDatabaseName));
         serviceCollection.AddSingleton(_ => new ApplicationContext(sqlConnectionString));
         serviceCollection.AddSingleton<IUserRepository, UserRepository>();
+        serviceCollection.AddSingleton<IFileRepository, FileRepository>();
 
         return serviceCollection;
     }

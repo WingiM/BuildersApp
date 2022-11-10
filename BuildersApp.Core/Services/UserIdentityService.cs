@@ -22,7 +22,7 @@ public class UserIdentityService : IUserIdentityService
 
     public User? CurrentUser { get; private set; }
 
-    public async Task<bool> TrySetCurrentUser(string login)
+    public async Task<bool> TrySetCurrentUserAsync(string login)
     {
         var jwt = _encryptionService.GetJwtForUser(login);
         await _localStorageService.SetStringAsync(LocalStorageKeys.Authorization, jwt);
@@ -31,7 +31,7 @@ public class UserIdentityService : IUserIdentityService
         return true;
     }
 
-    public async Task<bool> TryGetCurrentUser()
+    public async Task<bool> TryGetCurrentUserAsync()
     {
         var jwt = await _localStorageService.GetStringAsync(LocalStorageKeys.Authorization);
         if (jwt is null)
@@ -43,7 +43,7 @@ public class UserIdentityService : IUserIdentityService
         return true;
     }
 
-    public async Task Logout()
+    public async Task LogoutAsync()
     {
         await _localStorageService.RemoveAsync(LocalStorageKeys.Authorization);
         CurrentUser = null;

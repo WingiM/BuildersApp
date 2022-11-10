@@ -2,6 +2,6 @@
 
 public record LoginCredentials
 {
-    public string Login { get; set; }
-    public string? Password { get; set; }
+    public string Login { get; set; } = null!;
+    public string? Password { get; set; } = null!;
 }
