@@ -1,7 +1,7 @@
-﻿namespace BuildersApp.Core.Models;
+﻿namespace BuildersApp.Core.Models.UserInfo;
 
 [Serializable]
-public class DesignerData : Data
+public class DesignerPersonalInfo : PersonalInfoBase
 {
     public string Director { get; init; }
     public string LeadEngineer { get; init; }

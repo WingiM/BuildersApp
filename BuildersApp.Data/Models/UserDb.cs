@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Nodes;
 using BuildersApp.Core.Enums;
-using BuildersApp.Core.Models;
+using BuildersApp.Core.Models.UserInfo;
 
 namespace BuildersApp.Data.Models;
 
@@ -15,12 +14,12 @@ public class UserDb
     public int RoleId { get; init; }
     public string Data { get; init; } = null!;
 
-    public Core.Models.Data GetData() =>
+    public PersonalInfoBase GetData() =>
         RoleId switch
         {
-            (int)Roles.Customer => JsonSerializer.Deserialize<CustomerData>(Data) ?? throw new Exception(),
-            (int)Roles.Designer => JsonSerializer.Deserialize<DesignerData>(Data) ?? throw new Exception(),
-            (int)Roles.Developer => JsonSerializer.Deserialize<DeveloperData>(Data) ?? throw new Exception(),
+            (int)Roles.Customer => JsonSerializer.Deserialize<CustomerPersonalInfo>(Data) ?? throw new Exception(),
+            (int)Roles.Designer => JsonSerializer.Deserialize<DesignerPersonalInfo>(Data) ?? throw new Exception(),
+            (int)Roles.Developer => JsonSerializer.Deserialize<DeveloperPersonalInfo>(Data) ?? throw new Exception(),
             _ => throw new Exception()
         };
 }

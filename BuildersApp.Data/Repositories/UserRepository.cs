@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using BuildersApp.Core.Enums;
-using BuildersApp.Core.Models;
+using BuildersApp.Core.Models.UserInfo;
 using BuildersApp.Core.Repositories;
 using BuildersApp.Data.Models;
 using Dapper;
@@ -24,14 +24,17 @@ public class UserRepository : IUserRepository
         var userDb = session.QueryFirstOrDefault<UserDb>(sql, new { login }) ?? throw new Exception("Not found");
 
         return new User
-            { Data = userDb.GetData(), Email = userDb.Email, Login = userDb.Login, Role = (Roles)userDb.RoleId };
+        {
+            PersonalInfoBase = userDb.GetData(), Email = userDb.Email, 
+            Login = userDb.Login, Role = (Roles)userDb.RoleId
+        };
     }
 
     public async Task<bool> CreateUser(User user)
     {
         var userDb = new UserDb
         {
-            Data = JsonSerializer.Serialize(user.Data), Email = user.Email, Login = user.Login,
+            Data = JsonSerializer.Serialize(user.PersonalInfoBase), Email = user.Email, Login = user.Login,
             PhoneNumber = user.PhoneNumber, RoleId = (int)user.Role, EncryptedPassword = user.EncryptedPassword
         };
 

@@ -1,8 +1,10 @@
-﻿namespace BuildersApp.Core.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BuildersApp.Core.Enums;
 
 public enum IndustryTypes
 {
-    All = 1,
-    WaterSupply = 2,
-    GasSupply = 3
+    [Display(Name = "Любой")] Any = 1,
+    [Display(Name = "Водоснабжение")] WaterSupply = 2,
+    [Display(Name = "Газификация")] GasSupply = 3
 }

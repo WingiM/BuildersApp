@@ -1,6 +1,6 @@
 ﻿using BuildersApp.Core.Enums;
 
-namespace BuildersApp.Core.Models;
+namespace BuildersApp.Core.Models.UserInfo;
 
 public class User
 {
@@ -10,5 +10,5 @@ public class User
     public string Email { get; init; } = null!;
     public string PhoneNumber { get; init; } = null!;
     public Roles Role { get; init; }
-    public Data Data { get; init; } = null!;
+    public PersonalInfoBase PersonalInfoBase { get; init; } = null!;
 }

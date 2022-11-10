@@ -1,4 +1,4 @@
-﻿namespace BuildersApp.Core.Models;
+﻿namespace BuildersApp.Core.Models.UserInfo;
 
 public class Role
 {

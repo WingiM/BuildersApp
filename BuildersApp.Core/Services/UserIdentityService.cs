@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using BuildersApp.Core.Enums;
-using BuildersApp.Core.Models;
+using BuildersApp.Core.Models.UserInfo;
 using BuildersApp.Core.Repositories;
 using BuildersApp.Core.Services.Interfaces;
 

@@ -1,6 +1,5 @@
 ﻿using BuildersApp.Core.Services;
 using BuildersApp.Core.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildersApp.Core;

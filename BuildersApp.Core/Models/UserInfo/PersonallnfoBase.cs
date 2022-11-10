@@ -1,7 +1,7 @@
-﻿namespace BuildersApp.Core.Models;
+﻿namespace BuildersApp.Core.Models.UserInfo;
 
 [Serializable]
-public class Data
+public class PersonalInfoBase
 {
     public string Name { get; init; }
     public string Ogrn { get; init; }
