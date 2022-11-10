@@ -16,16 +16,17 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public User GetUser(string login)
+    public async Task<User> GetUser(string login)
     {
-        var session = _context.GetNpgsqlSession();
-        var sql = @"SELECT * FROM ""user"" WHERE login=@login";
+        await using var session = _context.GetNpgsqlSession();
+        const string sql = @"SELECT * FROM ""user"" WHERE login=@login";
 
-        var userDb = session.QueryFirstOrDefault<UserDb>(sql, new { login }) ?? throw new Exception("Not found");
+        var userDb = await session.QueryFirstOrDefaultAsync<UserDb>(sql, new { login }) ??
+                     throw new Exception("Not found");
 
         return new User
         {
-            PersonalInfoBase = userDb.GetData(), Email = userDb.Email, 
+            PersonalInfoBase = userDb.GetData(), Email = userDb.Email,
             Login = userDb.Login, Role = (Roles)userDb.RoleId
         };
     }
@@ -38,9 +39,9 @@ public class UserRepository : IUserRepository
             PhoneNumber = user.PhoneNumber, RoleId = (int)user.Role, EncryptedPassword = user.EncryptedPassword
         };
 
-        var sql = @"INSERT INTO ""user""(login, encrypted_password, email, phone_number, role_id, data) 
+        const string sql = @"INSERT INTO ""user""(login, encrypted_password, email, phone_number, role_id, data) 
                         values (@login, @encrypted_password, @email, @phone_number, @role_id, @data::json)";
-        var session = _context.GetNpgsqlSession();
+        await using var session = _context.GetNpgsqlSession();
         await session.ExecuteAsync(sql,
             new
             {
@@ -51,13 +52,19 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public byte[] GetEncryptedPasswordByLogin(string login)
+    public string GetEncryptedPasswordByLogin(string login)
     {
-        throw new NotImplementedException();
+        using var session = _context.GetNpgsqlSession();
+        var sql = @"SELECT encrypted_password FROM ""user"" WHERE login=@login";
+
+        return session.QueryFirstOrDefault<string>(sql, new { login }) ?? throw new Exception();
     }
 
     public bool IsUserRegistered(string login)
     {
-        throw new NotImplementedException();
+        using var session = _context.GetNpgsqlSession();
+        var sql = @"SELECT EXISTS(SELECT id FROM ""user"" WHERE login=@login)";
+
+        return session.ExecuteScalar<bool>(sql, new { login });
     }
 }

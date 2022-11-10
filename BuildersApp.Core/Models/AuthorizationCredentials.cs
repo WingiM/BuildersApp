@@ -3,5 +3,5 @@
 public class AuthorizationCredentials
 {
     public string Login { get; init; }
-    public byte[] Password { get; init; }
+    public string Password { get; init; }
 }

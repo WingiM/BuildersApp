@@ -12,5 +12,5 @@ public class Project
     public UserTuple CreatedBy { get; set; }
     public DateTime DateCreated { get; set; }
     
-    public List<Document> Documents { get; }
+    public List<Document> Documents { get; init; }
 }

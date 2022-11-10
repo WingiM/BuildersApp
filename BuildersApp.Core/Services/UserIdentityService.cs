@@ -26,7 +26,7 @@ public class UserIdentityService : IUserIdentityService
     {
         var jwt = _encryptionService.GetJwtForUser(login);
         await _localStorageService.SetStringAsync(LocalStorageKeys.Authorization, jwt);
-        CurrentUser = _userRepository.GetUser(login);
+        CurrentUser = await _userRepository.GetUser(login);
 
         return true;
     }
@@ -39,7 +39,7 @@ public class UserIdentityService : IUserIdentityService
         var handler = new JwtSecurityTokenHandler();
         var jwtSecurityToken = handler.ReadJwtToken(jwt);
 
-        CurrentUser = _userRepository.GetUser(jwtSecurityToken.Audiences.First());
+        CurrentUser = await _userRepository.GetUser(jwtSecurityToken.Audiences.First());
         return true;
     }
 

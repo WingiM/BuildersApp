@@ -37,7 +37,7 @@ public class AuthorizationService : IAuthorizationService
         }
 
         var password = _repository.GetEncryptedPasswordByLogin(loginCredentials.Login);
-        if (!_encryptionService.EncryptPassword(loginCredentials.Password).SequenceEqual(password))
+        if (!_encryptionService.EncryptPassword(loginCredentials.Password).Equals(password))
             return false;
         var res = await _identityService.TrySetCurrentUserAsync(loginCredentials.Login);
         return res;

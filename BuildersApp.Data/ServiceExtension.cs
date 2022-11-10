@@ -1,4 +1,5 @@
-﻿using BuildersApp.Core.Repositories;
+﻿using BuildersApp.Core.Models;
+using BuildersApp.Core.Repositories;
 using BuildersApp.Data.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ public static class ServiceExtension
         serviceCollection.AddSingleton(_ => new ApplicationContext(sqlConnectionString));
         serviceCollection.AddSingleton<IUserRepository, UserRepository>();
         serviceCollection.AddSingleton<IFileRepository, FileRepository>();
+        serviceCollection.AddSingleton<IProjectRepository, ProjectRepository>();
 
         return serviceCollection;
     }
