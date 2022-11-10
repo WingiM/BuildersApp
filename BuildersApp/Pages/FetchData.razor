@@ -3,7 +3,10 @@
 <PageTitle>Weather forecast</PageTitle>
 
 @using BuildersApp.Data
-@inject WeatherForecastService ForecastService
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Data.Models
+@using BuildersApp.Core.Models
+@inject IUserRepository UserRepository;
 
 <h1>Weather forecast</h1>
 
@@ -45,7 +48,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+       UserRepository.GetUser("123132");
     }
 
 }
