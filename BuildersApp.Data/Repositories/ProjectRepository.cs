@@ -31,7 +31,7 @@ public class ProjectRepository : IProjectRepository
         var sql = @"SELECT * FROM project WHERE id=@id";
         var projectDb = await session.QueryFirstOrDefaultAsync<ProjectDb>(sql, new { id }) ?? throw new Exception();
 
-        sql = @"SELECT d.id, d.name, pd.is_signed, pd.is_necessary 
+        sql = @"SELECT pd.id, d.name, pd.is_signed, pd.is_necessary 
                 FROM project_document pd 
                     JOIN document d 
                         ON pd.document_id = d.id 

@@ -12,6 +12,7 @@ public static class ServiceExtension
         serviceCollection.AddScoped<ILocalStorageService, LocalStorageService>();
         serviceCollection.AddScoped<IUserIdentityService, UserIdentityService>();
         serviceCollection.AddScoped<IAuthorizationService, AuthorizationService>();
+        serviceCollection.AddScoped<IFileService, FileService>();
         return serviceCollection;
     }
 }
