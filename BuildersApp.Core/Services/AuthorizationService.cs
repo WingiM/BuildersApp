@@ -1,4 +1,5 @@
-﻿using BuildersApp.Core.Models;
+﻿using System.Text;
+using BuildersApp.Core.Models;
 using BuildersApp.Core.Models.UserInfo;
 using BuildersApp.Core.Repositories;
 using BuildersApp.Core.Services.Interfaces;
@@ -37,7 +38,8 @@ public class AuthorizationService : IAuthorizationService
         }
 
         var password = _repository.GetEncryptedPasswordByLogin(loginCredentials.Login);
-        if (!_encryptionService.EncryptPassword(loginCredentials.Password).Equals(password))
+        var encryptedPassword = Encoding.UTF8.GetString(_encryptionService.EncryptPassword(loginCredentials.Password));
+        if (!encryptedPassword.Equals(password))
             return false;
         var res = await _identityService.TrySetCurrentUserAsync(loginCredentials.Login);
         return res;

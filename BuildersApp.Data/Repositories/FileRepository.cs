@@ -8,9 +8,9 @@ public class FileRepository : IFileRepository
 {
     private readonly GridFSBucket _fileSystem;
 
-    public FileRepository(GridFSBucket fileSystem)
+    public FileRepository(MongoConnection connection)
     {
-        _fileSystem = fileSystem;
+        _fileSystem = new GridFSBucket(connection.Database);
     }
 
     public async Task UploadFileAsync(string filename, Stream file)

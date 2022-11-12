@@ -26,7 +26,14 @@ public class UserIdentityService : IUserIdentityService
     {
         var jwt = _encryptionService.GetJwtForUser(login);
         await _localStorageService.SetStringAsync(LocalStorageKeys.Authorization, jwt);
-        CurrentUser = await _userRepository.GetUser(login);
+        try
+        {
+            CurrentUser = await _userRepository.GetUser(login);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
 
         return true;
     }

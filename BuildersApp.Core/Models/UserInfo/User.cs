@@ -4,11 +4,11 @@ namespace BuildersApp.Core.Models.UserInfo;
 
 public class User
 {
-    public int Id { get; init; }
-    public string Login { get; init; } = null!;
-    public string EncryptedPassword { get; init; } = null!;
-    public string Email { get; init; } = null!;
-    public string PhoneNumber { get; init; } = null!;
-    public Roles Role { get; init; }
-    public PersonalInfoBase PersonalInfoBase { get; init; } = null!;
+    public int Id { get; set; }
+    public string Login { get; set; } = null!;
+    public string EncryptedPassword { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string PhoneNumber { get; set; } = null!;
+    public Roles Role { get; set; }
+    public PersonalInfoBase PersonalInfo { get; set; } = null!;
 }

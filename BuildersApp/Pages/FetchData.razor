@@ -46,7 +46,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-       UserRepository.GetUser("123132");
+       var res = await UserRepository.GetUser("123132");
     }
 
 }

@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using BuildersApp.Core.Services.Interfaces
+@inherits LayoutComponentBase
+@inject IUserIdentityService UserIdentityService
+@inject NavigationManager NavigationManager;
 
 <PageTitle>BuildersApp</PageTitle>
 
@@ -8,12 +11,32 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+        @if (UserIdentityService.CurrentUser is not null)
+        {
+            var user = UserIdentityService.CurrentUser;
+            <div class="top-row px-4">
+                <span>Hello, <NavLink href="/MyCabinet">@user.Email - @user.Role</NavLink></span>
+            </div>
+        }
 
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!await UserIdentityService.TryGetCurrentUserAsync())
+            {
+                NavigationManager.NavigateTo("/AuthorizationPage");
+            }
+            StateHasChanged();
+        }
+    }
+
+}

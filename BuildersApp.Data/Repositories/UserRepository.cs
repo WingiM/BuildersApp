@@ -26,8 +26,8 @@ public class UserRepository : IUserRepository
 
         return new User
         {
-            PersonalInfoBase = userDb.GetData(), Email = userDb.Email,
-            Login = userDb.Login, Role = (Roles)userDb.RoleId
+            PersonalInfo = userDb.GetData(), Email = userDb.Email, Id = userDb.Id,
+            Login = userDb.Login, Role = (Roles)userDb.RoleId, PhoneNumber = userDb.PhoneNumber
         };
     }
 
@@ -35,7 +35,7 @@ public class UserRepository : IUserRepository
     {
         var userDb = new UserDb
         {
-            Data = JsonSerializer.Serialize(user.PersonalInfoBase), Email = user.Email, Login = user.Login,
+            Data = JsonSerializer.Serialize(user.PersonalInfo), Email = user.Email, Login = user.Login,
             PhoneNumber = user.PhoneNumber, RoleId = (int)user.Role, EncryptedPassword = user.EncryptedPassword
         };
 
