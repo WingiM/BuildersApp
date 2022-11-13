@@ -19,9 +19,9 @@ public class FileRepository : IFileRepository
         await _fileSystem.UploadFromStreamAsync(filename, file);
     }
 
-    public async Task<Stream> DownloadFileToStreamAsync(string filename)
+    public async Task<byte[]> DownloadFileToStreamAsync(string filename)
     {
-        return await _fileSystem.OpenDownloadStreamByNameAsync(filename);
+        return await _fileSystem.DownloadAsBytesAsync(filename);
     }
 
     public async Task<bool> FileExistsAsync(string filename)

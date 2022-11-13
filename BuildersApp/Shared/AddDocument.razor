@@ -1,0 +1,62 @@
+﻿@using BuildersApp.Core.Models
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Core.Enums
+@inject IProjectRepository ProjectRepository;
+<h3>AddDocument</h3>
+
+@if (_documentsInitialized)
+{
+    <EditForm Model="@document" OnValidSubmit="AddDocumentToProject">
+        <DataAnnotationsValidator/>
+        <InputSelect @bind-Value="@document.DocumentId" id="form3Example2c" class="form-control">
+            @foreach (var doc in _missingDocuments)
+            {
+                <option value="@doc.Id">@doc.Name</option>
+            }
+        </InputSelect>
+        <ValidationSummary/>
+        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+            <input type="submit" class="btn btn-primary btn-lg" value="Add"/>
+        </div>
+
+        @if (_successfullyAdded)
+        {
+            <div class="alert alert-success" role="alert">
+                Added successfully
+            </div>
+        }
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public Project Project { get; set; }
+
+    [Parameter]
+    public IndustryTypes IndustryType { get; set; }
+
+    private bool _successfullyAdded;
+    private QuickDocument document;
+
+    private List<Document> _missingDocuments;
+    private bool _documentsInitialized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _missingDocuments = (await ProjectRepository.ListMissingDocumentsForProject(Project.Id, IndustryType)).ToList();
+        _documentsInitialized = true;
+        document = new();
+    }
+
+    private async Task AddDocumentToProject()
+    {
+        await ProjectRepository.AddDocumentToProject(Project.Id, document.DocumentId);
+        document = new();
+        _successfullyAdded = true;
+        StateHasChanged();
+        await Task.Delay(1000);
+        _successfullyAdded = false;
+    }
+
+}

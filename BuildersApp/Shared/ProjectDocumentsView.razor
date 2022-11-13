@@ -6,9 +6,18 @@
 @inject IFileService FileService;
 @inject IJSRuntime JsRuntime;
 @inject IProjectRepository ProjectRepository;
-<h3>ProjectDocumentsView</h3>
 
-<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+@if (User.Role == Roles.Customer)
+{
+    <button class="btn btn-primary" @onclick="AddNewDocument">@_btnText</button>
+}
+
+@if (_addDocument)
+{
+    <AddDocument Project="Project" IndustryType="@((User.PersonalInfo as CustomerPersonalInfo).IndustryType)"/>
+}
+
+<div hidden="@_addDocument" style="display: flex; flex-direction: row; flex-wrap: wrap;">
     @foreach (var document in Project.Documents)
     {
         <DocumentComponent Document="document" UserRole="User.Role"/>
@@ -23,9 +32,21 @@
     [Parameter]
     public Project Project { get; set; }
 
+    private bool _addDocument;
+    private string _btnText = "Add new document";
+
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+    }
+
+    private async Task AddNewDocument()
+    {
+        _addDocument = !_addDocument;
+        _btnText = !_addDocument ? "Add new document" : "Show documents";
+        Project = await ProjectRepository.GetProject(Project.Id, Roles.Customer);
+        StateHasChanged();
     }
 
 }

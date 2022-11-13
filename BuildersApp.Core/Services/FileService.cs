@@ -19,7 +19,7 @@ public class FileService : IFileService
         await _fileRepository.UploadFileAsync(fileName, stream);
     }
 
-    public async Task<Stream> GetDocumentDownloadingStream(Document document)
+    public async Task<byte[]> GetDocumentDownloadingStream(Document document)
     {
         var fileName = GetDocumentFileName(document);
         return await _fileRepository.DownloadFileToStreamAsync(fileName);

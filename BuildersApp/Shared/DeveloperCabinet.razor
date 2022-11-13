@@ -1,0 +1,46 @@
+﻿@using BuildersApp.Core.Models.UserInfo
+<EditForm Model="@_developer">
+    <DataAnnotationsValidator/>
+
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_developer.Tin" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _developer.Tin"/>
+        <label class="form-label" for="form3Example1c">TIN</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_developer.Ogrn" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _developer.Ogrn"/>
+        <label class="form-label" for="form3Example1c">OGRN</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_developer.Kpp" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _developer.Kpp"/>
+        <label class="form-label" for="form3Example1c">KPP</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_developer.Address" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _developer.Address"/>
+        <label class="form-label" for="form3Example1c">Address</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_developer.ExecutiveDirector" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _developer.ExecutiveDirector"/>
+        <label class="form-label" for="form3Example1c">Executive director</label>
+    </div>
+
+    <ValidationSummary/>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public PersonalInfoBase PersonalInfo { get; set; }
+
+    private DeveloperPersonalInfo _developer;
+
+    protected override void OnInitialized()
+    {
+        _developer = (DeveloperPersonalInfo)PersonalInfo;
+    }
+
+}

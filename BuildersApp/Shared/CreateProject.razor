@@ -41,7 +41,7 @@
 
         <ValidationSummary hidden="@(!_buttonPressed)"/>
         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-            <input type="submit" @onclick="() => _buttonPressed = true" class="btn btn-primary btn-lg" value="Register"/>
+            <input type="submit" @onclick="() => _buttonPressed = true" class="btn btn-primary btn-lg" value="Create"/>
         </div>
 
         @if (_successfullyAdded)
@@ -81,6 +81,7 @@
         await ProjectRepository.CreateProject(_project);
         CreateNewProject();
         _successfullyAdded = true;
+        StateHasChanged();
         await Task.Delay(1000);
         _successfullyAdded = false;
     }

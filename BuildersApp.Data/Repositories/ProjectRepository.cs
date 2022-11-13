@@ -26,6 +26,18 @@ public class ProjectRepository : IProjectRepository
         return res;
     }
 
+    public async Task<IEnumerable<Document>> ListMissingDocumentsForProject(int projectId, IndustryTypes industryType)
+    {
+        await using var session = _context.GetNpgsqlSession();
+        var sql =
+            @"SELECT * FROM document d 
+                WHERE industry_id=@industryId 
+                  AND id NOT IN 
+                      (SELECT document_id FROM project_document WHERE project_id = @projectId)";
+
+        return await session.QueryAsync<Document>(sql, new { projectId, industryId = (int)industryType });
+    }
+
     public async Task<Document> GetDocument(int documentId)
     {
         await using var session = _context.GetNpgsqlSession();
@@ -133,7 +145,7 @@ public class ProjectRepository : IProjectRepository
         var sql = @"INSERT INTO project(name, industry_id, designer_id, developer_id, created_by) 
                     VALUES (@name, @industry_id, @designer_id, @developer_id, @created_by) returning id";
 
-        var projectId = await session.ExecuteScalarAsync<int>(sql,
+        await session.ExecuteAsync(sql,
             new
             {
                 name = project.Name, industry_id = (int)project.IndustryType,
@@ -141,16 +153,13 @@ public class ProjectRepository : IProjectRepository
                 date_created = project.DateCreated, created_by = project.CreatedById
             });
 
-        sql = @"SELECT id FROM document WHERE industry_id = @industryId";
-        var documentList = (await session.QueryAsync<int>(sql,
-                new { industryId = (int)project.IndustryType }))
-            .ToList()
-            .Select(x => new { projectId, documentId = x, dateCreated = DateTime.Now });
-        sql = @"INSERT INTO project_document(project_id, document_id, date_created) 
-                    VALUES (@projectId, @documentId, @dateCreated)";
-
-        await session.ExecuteAsync(sql, documentList);
-
         return true;
+    }
+
+    public async Task AddDocumentToProject(int projectId, int documentId)
+    {
+        await using var session = _context.GetNpgsqlSession();
+        var sql = @"INSERT INTO project_document(project_id, document_id) VALUES (@projectId, @documentId)";
+        await session.ExecuteAsync(sql, new { projectId, documentId });
     }
 }

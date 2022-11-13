@@ -8,4 +8,5 @@ public interface IUserIdentityService
     public Task<bool> TrySetCurrentUserAsync(string login);
     public Task<bool> TryGetCurrentUserAsync();
     public Task LogoutAsync();
+    public Task UpdateUser(int currentUserId, PersonalInfoBase personalInfo);
 }

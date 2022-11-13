@@ -1,0 +1,51 @@
+﻿@using BuildersApp.Core.Models.UserInfo
+<EditForm Model="@_designer">
+    <DataAnnotationsValidator/>
+
+
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Tin" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Tin"/>
+        <label class="form-label" for="form3Example1c">TIN</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Ogrn" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Ogrn"/>
+        <label class="form-label" for="form3Example1c">OGRN</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Kpp" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Kpp"/>
+        <label class="form-label" for="form3Example1c">KPP</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Address" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Address"/>
+        <label class="form-label" for="form3Example1c">Address</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Director" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Director"/>
+        <label class="form-label" for="form3Example1c">Director</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.LeadEngineer" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.LeadEngineer"/>
+        <label class="form-label" for="form3Example1c">Lead engineer</label>
+    </div>
+    <ValidationSummary/>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public PersonalInfoBase PersonalInfo { get; set; }
+
+    private DesignerPersonalInfo _designer;
+
+    protected override void OnInitialized()
+    {
+        _designer = (DesignerPersonalInfo)PersonalInfo;
+    }
+
+}

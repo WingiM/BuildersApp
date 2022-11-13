@@ -58,6 +58,8 @@
         if (_user.PersonalInfo is not CustomerPersonalInfo data)
         {
             _noData = true;
+            if (firstRender)
+                StateHasChanged();
             return;
         }
         _projects = (await ProjectRepository.ListProjects(data!.IndustryType)).ToList();

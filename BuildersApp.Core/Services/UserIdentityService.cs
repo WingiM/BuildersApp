@@ -55,4 +55,10 @@ public class UserIdentityService : IUserIdentityService
         await _localStorageService.RemoveAsync(LocalStorageKeys.Authorization);
         CurrentUser = null;
     }
+
+    public async Task UpdateUser(int currentUserId, PersonalInfoBase personalInfo)
+    {
+        await _userRepository.UpdateUser(currentUserId, personalInfo);
+        await TryGetCurrentUserAsync();
+    }
 }

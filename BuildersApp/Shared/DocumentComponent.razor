@@ -20,6 +20,8 @@
         }
         else
         {
+            <input type="checkbox" disabled value="Is signed" @bind="_signed"/> <text>Is signed</text> <br/>
+            <input type="checkbox" disabled value="Is necessary" @bind="_necessary"/> <text>Is necessary</text> <br/>
             <InputFile OnChange="@LoadFile"/>
         }
     </div>
@@ -47,7 +49,7 @@
     {
         try
         {
-            await using var stream = await FileService.GetDocumentDownloadingStream(Document);
+            var stream = await FileService.GetDocumentDownloadingStream(Document);
             await JsRuntime.InvokeVoidAsync("downloadFileFromStream", $"{Document.Name} от {Document.DateCreated}", stream);
         }
         catch (Exception e)

@@ -1,0 +1,31 @@
+﻿@using BuildersApp.Core.Models.UserInfo
+@using BuildersApp.Core.Enums
+
+<EditForm Model="@_customer">
+    <div class="form-outline flex-fill mb-0">
+        <label class="form-label" for="form3Example3c">Your industry type</label> <br>
+        <InputRadioGroup @bind-Value="@_customer.IndustryType" class="form-control">
+            <InputRadio Value="@IndustryTypes.GasSupply"/> <text>@IndustryTypes.GasSupply</text> <br>
+            <InputRadio Value="@IndustryTypes.WaterSupply"/> <text>@IndustryTypes.WaterSupply</text><br>
+        </InputRadioGroup>
+    </div>
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_customer.Department" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _customer.Department"/>
+        <label class="form-label" for="form3Example1c">Department</label>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public PersonalInfoBase PersonalInfo { get; set; }
+
+    private CustomerPersonalInfo _customer;
+
+    protected override void OnInitialized()
+    {
+        _customer = (CustomerPersonalInfo)PersonalInfo;
+    }
+
+}

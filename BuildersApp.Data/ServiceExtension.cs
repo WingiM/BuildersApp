@@ -14,11 +14,11 @@ public static class ServiceExtension
         var mongoDatabaseName = configuration["Data:MongoDatabase"];
         var mongoConnectionString = configuration["Data:MongoConnection"];
         var sqlConnectionString = configuration["Data:SqlConnection"];
-        serviceCollection.AddSingleton(_ => new MongoConnection(mongoConnectionString, mongoDatabaseName));
-        serviceCollection.AddSingleton(_ => new ApplicationContext(sqlConnectionString));
-        serviceCollection.AddSingleton<IUserRepository, UserRepository>();
-        serviceCollection.AddSingleton<IFileRepository, FileRepository>();
-        serviceCollection.AddSingleton<IProjectRepository, ProjectRepository>();
+        serviceCollection.AddScoped(_ => new MongoConnection(mongoConnectionString, mongoDatabaseName));
+        serviceCollection.AddScoped(_ => new ApplicationContext(sqlConnectionString));
+        serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        serviceCollection.AddScoped<IFileRepository, FileRepository>();
+        serviceCollection.AddScoped<IProjectRepository, ProjectRepository>();
 
         return serviceCollection;
     }

@@ -5,7 +5,6 @@
 @using BuildersApp.Core.Services.Interfaces
 @using BuildersApp.Core.Enums
 @using BuildersApp.Core.Models.UserInfo
-@using Microsoft.AspNetCore.Components
 @inject IUserIdentityService UserIdentityService
 @inject IAuthorizationService AuthorizationService;
 
@@ -18,21 +17,20 @@
         <div class="card-body">
             <h5 class="card-title">Login: @user.Login <br> Email: @user.Email</h5>
         </div>
-        <EditForm EditContext="@_editContext" class="card-body">
+        <EditForm EditContext="@_editContext" OnValidSubmit="SaveChanges" class="card-body">
             @switch (user.Role)
             {
                 case Roles.Customer:
-                    <InputRadioGroup @bind-Value="@(_personalInfo)">
-                        <InputRadio Value="@IndustryTypes.GasSupply"/><text>WaterSupply</text>
-                        <InputRadio Value="@IndustryTypes.WaterSupply"/><text>GasSupply</text>
-                    </InputRadioGroup>
+                    <CustomerCabinet PersonalInfo="@_personalInfo"/>
                     break;
                 case Roles.Designer:
+                    <DesignerCabinet PersonalInfo="@_personalInfo"/>
                     break;
                 case Roles.Developer:
+                    <DeveloperCabinet PersonalInfo="@_personalInfo"/>
                     break;
             }
-            <input type="submit" class="btn btn-primary btn-lg" value="Register"/>
+            <input type="submit" class="btn btn-primary btn-lg" value="Save"/>
         </EditForm>
         <div class="card-body">
             <NavLink @onclick="_ => AuthorizationService.LogoutAsync()" href="/AuthorizationPage">Logout</NavLink>
@@ -46,19 +44,13 @@
 
     private void SetPersonalInfo(User user)
     {
-        switch (user.Role)
-        {
-            case Roles.Customer:
-                _personalInfo = new CustomerPersonalInfo();
-                break;
-            case Roles.Developer:
-                _personalInfo = new DeveloperPersonalInfo();
-                break;
-            case Roles.Designer:
-                _personalInfo = new DesignerPersonalInfo();
-                break;
-        }
+        _personalInfo = UserIdentityService.CurrentUser.PersonalInfo;
         _editContext = new EditContext(_personalInfo);
+    }
+
+    private async Task SaveChanges()
+    {
+        await UserIdentityService.UpdateUser(UserIdentityService.CurrentUser.Id, _personalInfo);
     }
 
 }

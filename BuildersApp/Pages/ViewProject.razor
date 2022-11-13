@@ -8,10 +8,15 @@
 @inject IProjectRepository ProjectRepository;
 @inject IUserIdentityService UserIdentityService;
 
-<h3>ViewProject</h3>
+@if (_project is not null)
+{
+    <h3>@_project.Name</h3>
+}
 
 @if (_user is not null)
 {
+    <p>Developer: @_project.Developer.Name</p>
+    <p>Designer: @_project.Designer.Name</p>
     <ProjectDocumentsView User="_user" Project="_project"/>
 }
 

@@ -11,4 +11,5 @@ public interface IUserRepository
     public Task<bool> CreateUser(User user);
     public string GetEncryptedPasswordByLogin(string login);
     public bool IsUserRegistered(string login);
+    public Task UpdateUser(int currentUserId, PersonalInfoBase personalInfo);
 }

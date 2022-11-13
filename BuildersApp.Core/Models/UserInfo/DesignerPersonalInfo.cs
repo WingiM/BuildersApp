@@ -1,8 +1,13 @@
-﻿namespace BuildersApp.Core.Models.UserInfo;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BuildersApp.Core.Models.UserInfo;
 
 [Serializable]
 public class DesignerPersonalInfo : ExtendedPersonalInfo
 {
-    public string Director { get; init; }
-    public string LeadEngineer { get; init; }
+    [Required]
+    public string Director { get; set; }
+    
+    [Required]
+    public string LeadEngineer { get; set; }
 }
