@@ -3,6 +3,8 @@
 @using BuildersApp.Core.Models.UserInfo
 @using BuildersApp.Core.Repositories
 @using BuildersApp.Core.Services.Interfaces
+@using BuildersApp.Core.Enums
+@using WaterForm = BuildersApp.Shared.WaterForm
 @inject NavigationManager NavigationManager
 @inject IProjectRepository ProjectRepository;
 @inject IUserIdentityService UserIdentityService;
@@ -17,10 +19,22 @@
     <p>Developer: @_project.Developer.Name</p>
     <p>Designer: @_project.Designer.Name</p>
     <ProjectDocumentsView User="_user" Project="_project"/>
+    if (_user.Role == Roles.Designer)
+    {
+        if (_project.IndustryType == IndustryTypes.GasSupply)
+        {
+            <GasForm ProjectId="_project.Id"/>
+        }
+        else
+        {
+            <WaterForm ProjectId="_project.Id"/>
+        }
+    }
 }
 
 
 @code {
+
     [Parameter]
     public int Id { get; set; }
 

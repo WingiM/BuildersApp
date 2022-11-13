@@ -3,16 +3,19 @@ using BuildersApp.Core.Models;
 using BuildersApp.Core.Repositories;
 using BuildersApp.Data.Models;
 using Dapper;
+using MongoDB.Driver;
 
 namespace BuildersApp.Data.Repositories;
 
 public class ProjectRepository : IProjectRepository
 {
     private readonly ApplicationContext _context;
+    private readonly IMongoCollection<BaseDesignerForm> _forms;
 
-    public ProjectRepository(ApplicationContext context)
+    public ProjectRepository(ApplicationContext context, MongoConnection connection)
     {
         _context = context;
+        _forms = connection.Database!.GetCollection<BaseDesignerForm>("Forms");
     }
 
     public async Task<IEnumerable<ProjectInfo>> ListProjects(IndustryTypes industryType)
@@ -103,7 +106,7 @@ public class ProjectRepository : IProjectRepository
         {
             Designer = designer, Developer = developer, CreatedBy = author,
             DeveloperId = developer.Id, DesignerId = designer.Id,
-            IndustryType = (IndustryTypes)projectDb.IndustryType, Id = projectDb.Id,
+            IndustryType = (IndustryTypes)projectDb.IndustryId, Id = projectDb.Id,
             DateCreated = projectDb.DateCreated, Name = projectDb.Name,
             Documents = documents.ToList()
         };
@@ -160,5 +163,15 @@ public class ProjectRepository : IProjectRepository
         await using var session = _context.GetNpgsqlSession();
         var sql = @"INSERT INTO project_document(project_id, document_id) VALUES (@projectId, @documentId)";
         await session.ExecuteAsync(sql, new { projectId, documentId });
+    }
+
+    public async Task<BaseDesignerForm?> GetForm(int projectId)
+    {
+        return await (await _forms.FindAsync(x => x.ProjectId == projectId)).SingleOrDefaultAsync();
+    }
+
+    public async Task AddForm(BaseDesignerForm gasForm)
+    {
+        await _forms.InsertOneAsync(gasForm);
     }
 }

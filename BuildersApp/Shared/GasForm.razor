@@ -1,0 +1,66 @@
+﻿@using BuildersApp.Core.Repositories
+@inject IProjectRepository ProjectRepository
+<h3>GasForm</h3>
+
+<EditForm Model="_gasForm">
+
+    <table class="table table-bordered">
+        <tr style="height: 50px;">
+            <th scope="col">Наименование</th>
+            <th scope="col">Примечание (пример заполнения)</th>
+        </tr>
+        <tr style="height: 50px;">
+            <th colspan="2" scope="col" class="text-center">Технико-экономические показатели (ТЭП) <br> Газопровод-ввод низкого давления</th>
+        </tr>
+        <tr style="height: 50px;">
+            <th scope="row">Диаметр трубопровода и протяженность линейного объекта (м)</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_gasForm.Diameter"/>
+            </td>
+        </tr>
+        <tr style="height: 50px;">
+            <th scope="col" colspan="2" class="text-center">Вводной газопровод низкого давления</th>
+        </tr>
+        <tr style="height: 50px;">
+            <th scope="row">Диаметр трубопровода и протяженность линейного объекта (м)</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_gasForm.Diameter2"/>
+            </td>
+        </tr>
+        <tr style="height: 50px;">
+            <th scope="col">Сметная стоимость работ, тыс. руб</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_gasForm.Cost"/>
+            </td>
+        </tr>
+        <tr style="height: 50px;">
+            <th scope="col">Срок разработки проектной документации, месяцев</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_gasForm.Duration"/>
+
+            </td>
+        </tr>
+    </table>
+    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+        <input type="submit" class="btn btn-primary btn-lg" value="Add"/>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private Core.Models.GasForm _gasForm = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _gasForm = (Core.Models.GasForm)(await ProjectRepository.GetForm(ProjectId) ?? new Core.Models.GasForm());
+    }
+
+    private async Task AddForm()
+    {
+        await ProjectRepository.AddForm(_gasForm);
+    }
+
+}

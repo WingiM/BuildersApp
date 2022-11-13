@@ -1,0 +1,73 @@
+﻿@using BuildersApp.Core.Models
+@using BuildersApp.Core.Repositories
+@inject IProjectRepository ProjectRepository
+<h3>Water form</h3>
+
+<EditForm Model="_waterForm" OnValidSubmit="AddForm">
+
+    <table class="table table-bordered">
+        <tr>
+            <th scope="col">Наименование</th>
+            <th scope="col">Примечание (пример заполнения)</th>
+        </tr>
+        <tr>
+            <th colspan="2" scope="col" class="text-center">Технико-экономические показатели (ТЭП)</th>
+        </tr>
+        <tr>
+            <th scope="row">Диаметр трубопровода и протяженность линейного объекта (м)</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_waterForm.Diameter"/>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col">Производительность БОС м^3/сут</th>
+            <td>
+
+                <InputText style="width:100%;height:100%;" @bind-Value="_waterForm.Performance"/>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col">кол.-во и производительность КНС (м^3/ч)</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_waterForm.KNS"/>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col">Сметная стоимость работ, тыс. руб</th>
+            <td>
+                <InputText style="width:100%;height:100%;" @bind-Value="_waterForm.Cost"/>
+
+            </td>
+        </tr>
+        <tr>
+            <th scope="col">Срок разработки проектной документации, месяцев</th>
+            <td>
+
+                <InputText style="width:100%;height:100%;" @bind-Value="_waterForm.Duration"/>
+            </td>
+        </tr>
+    </table>
+    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+        <input type="submit" class="btn btn-primary btn-lg" value="Add"/>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private Core.Models.WaterForm _waterForm = new();
+    
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _waterForm = (Core.Models.WaterForm)(await ProjectRepository.GetForm(ProjectId) ?? new Core.Models.WaterForm());
+    }
+
+    private async Task AddForm()
+    {
+        await ProjectRepository.AddForm(_waterForm);
+    }
+
+}
