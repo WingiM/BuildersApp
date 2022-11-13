@@ -26,12 +26,33 @@ public class ProjectRepository : IProjectRepository
         return res;
     }
 
+    public async Task<IEnumerable<ProjectInfo>> ListProjects(Roles role, int id)
+    {
+        await using var session = _context.GetNpgsqlSession();
+        string sql =
+            @"SELECT project.id, name, date_created, data ->> 'Name' as ""AuthorName"" 
+                from project 
+                    JOIN ""user"" u on project.created_by = u.id WHERE ";
+        if (role == Roles.Designer)
+        {
+            sql += "designer_id = @id";
+        }
+        else if (role == Roles.Developer)
+        {
+            sql += "developer_id = @id";
+        }
+
+        var res = await session.QueryAsync<ProjectInfo>(sql, new { id });
+
+        return res;
+    }
+
     public async Task<IEnumerable<Document>> ListMissingDocumentsForProject(int projectId, IndustryTypes industryType)
     {
         await using var session = _context.GetNpgsqlSession();
         var sql =
             @"SELECT * FROM document d 
-                WHERE industry_id=@industryId 
+                WHERE industry_id in (@industryId, 1) 
                   AND id NOT IN 
                       (SELECT document_id FROM project_document WHERE project_id = @projectId)";
 
@@ -51,28 +72,6 @@ public class ProjectRepository : IProjectRepository
         return await session.QueryFirstAsync<Document>(sql, new { documentId });
     }
 
-    public async Task<IEnumerable<ProjectInfo>> ListProjectsToDeveloper(int developerId)
-    {
-        await using var session = _context.GetNpgsqlSession();
-        const string sql =
-            @"SELECT id, name, date_created, data ->> 'Name' as ""AuthorName"" from project JOIN ""user"" on project.created_by = ""user"".id WHERE developer_id = @developer_id";
-
-        var res = await session.QueryAsync<ProjectInfo>(sql, new { developer_id = developerId });
-
-        return res;
-    }
-
-    public async Task<IEnumerable<ProjectInfo>> ListProjectsToDesigner(int designerId)
-    {
-        await using var session = _context.GetNpgsqlSession();
-        const string sql =
-            @"SELECT p.id, name, date_created, data ->> 'Name' as ""AuthorName"" from project p JOIN ""user"" on p.created_by = ""user"".id WHERE designer_id = @designer_id";
-
-        var res = await session.QueryAsync<ProjectInfo>(sql, new { designer_id = designerId });
-
-        return res;
-    }
-
     public async Task<Project> GetProject(int id, Roles role)
     {
         await using var session = _context.GetNpgsqlSession();
@@ -87,7 +86,7 @@ public class ProjectRepository : IProjectRepository
                 WHERE pd.project_id = @projectId";
         if (role != Roles.Customer)
         {
-            sql += "AND d.role_id = @roleId";
+            sql += " AND d.role_id = @roleId";
             parameters.Add("roleId", (int)role);
         }
 

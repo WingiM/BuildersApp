@@ -60,7 +60,7 @@ public class UserRepository : IUserRepository
             new
             {
                 login = userDb.Login, encrypted_password = userDb.EncryptedPassword, email = userDb.Email,
-                phone_number = userDb.PhoneNumber, role_id = userDb.RoleId, data = userDb.Data
+                phone_number = userDb.PhoneNumber, role_id = userDb.RoleId, data = "{}"
             });
 
         return true;

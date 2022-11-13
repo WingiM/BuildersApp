@@ -2,7 +2,11 @@
 <EditForm Model="@_designer">
     <DataAnnotationsValidator/>
 
-
+    <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_designer.Name" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _designer.Name"/>
+        <label class="form-label" for="form3Example1c">Name</label>
+    </div>
     <div class="form-outline flex-fill mb-0">
         <InputText @bind-Value="@_designer.Tin" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _designer.Tin"/>

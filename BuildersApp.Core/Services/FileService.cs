@@ -13,20 +13,26 @@ public class FileService : IFileService
         _fileRepository = fileRepository;
     }
 
-    public async Task AddDocument(Document document, Stream stream)
+    public async Task<string> AddDocument(Document document, Stream stream)
     {
         var fileName = GetDocumentFileName(document);
         await _fileRepository.UploadFileAsync(fileName, stream);
-    }
-
-    public async Task<byte[]> GetDocumentDownloadingStream(Document document)
-    {
-        var fileName = GetDocumentFileName(document);
         return await _fileRepository.DownloadFileToStreamAsync(fileName);
     }
 
+    public async Task<bool> FileExists(Document document)
+    {
+        return await _fileRepository.FileExistsAsync(document);
+    }
+
+    public async Task<string> GetDocumentPath(Document document)
+    {
+        return await _fileRepository.GetDocumentPath(document);
+    }
+
+
     private string GetDocumentFileName(Document document)
     {
-        return $"{document.Id}-{document.Name}-{document.DateCreated}";
+        return $"{document.Id}-{document.Name}.pdf";
     }
 }

@@ -3,6 +3,11 @@
 
 <EditForm Model="@_customer">
     <div class="form-outline flex-fill mb-0">
+        <InputText @bind-Value="@_customer.Name" type="text" id="form3Example1c" class="form-control"/>
+        <ValidationMessage For="() => _customer.Name"/>
+        <label class="form-label" for="form3Example1c">Name</label>
+    </div>
+    <div class="form-outline flex-fill mb-0">
         <label class="form-label" for="form3Example3c">Your industry type</label> <br>
         <InputRadioGroup @bind-Value="@_customer.IndustryType" class="form-control">
             <InputRadio Value="@IndustryTypes.GasSupply"/> <text>@IndustryTypes.GasSupply</text> <br>

@@ -1,7 +1,7 @@
-﻿@using BuildersApp.Core.Models
-@using BuildersApp.Core.Enums
+﻿@using BuildersApp.Core.Services.Interfaces
 @using BuildersApp.Core.Repositories
-@using BuildersApp.Core.Services.Interfaces
+@using BuildersApp.Core.Models
+@using BuildersApp.Core.Enums
 @inject IFileService FileService;
 @inject IJSRuntime JsRuntime;
 @inject IProjectRepository ProjectRepository;
@@ -13,16 +13,32 @@
         <p class="card-text">Sign date: @(Document.DateSigned == DateTime.MinValue ? "Not signed" : @Document.DateSigned.ToString("D"))</p>
         @if (UserRole == Roles.Customer)
         {
-            <input type="checkbox" value="Is signed" @bind="_signed"/> <text>Is signed</text> <br/>
-            <input type="checkbox" value="Is necessary" @bind="_necessary"/> <text>Is necessary</text> <br/>
-            <button class="btn btn-primary" @onclick="SaveChanges">Save changes</button> <br/>
-            <button class="btn btn-primary" @onclick="DownloadFile">Download file</button>
+            <input type="checkbox" value="Is signed" @bind="_signed"/>
+            <text>Is signed</text>
+            <br/>
+            <input type="checkbox" value="Is necessary" @bind="_necessary"/>
+            <text>Is necessary</text>
+            <br/>
+            <button class="btn btn-primary" @onclick="SaveChanges">Save changes</button>
+            <br/>
         }
         else
         {
-            <input type="checkbox" disabled value="Is signed" @bind="_signed"/> <text>Is signed</text> <br/>
-            <input type="checkbox" disabled value="Is necessary" @bind="_necessary"/> <text>Is necessary</text> <br/>
-            <InputFile OnChange="@LoadFile"/>
+            <input type="checkbox" disabled value="Is signed" @bind="_signed"/>
+            <text>Is signed</text>
+            <br/>
+            <input type="checkbox" disabled value="Is necessary" @bind="_necessary"/>
+            <text>Is necessary</text>
+            <br/>
+            <InputFile OnChange="@LoadFile" accept=".pdf"/>
+        }
+        @if (!_fileExists)
+        {
+            <a style="pointer-events: none" class="btn btn-danger" href="/documents/@($"{Document.Id}-{Document.Name}.pdf")" download="@($"{Document.Name}.pdf")">Download file</a>
+        }
+        else
+        {
+            <a class="btn btn-primary" href="/documents/@($"{Document.Id}-{Document.Name}.pdf")" download="@($"{Document.Name}.pdf")">Download file</a>
         }
     </div>
 </div>
@@ -35,34 +51,28 @@
     [Parameter]
     public Roles UserRole { get; set; }
 
+    private string _downloadPath;
+    private bool _fileExists;
+
     private bool _signed;
     private bool _necessary;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _signed = Document.IsSigned;
         _necessary = Document.IsNecessary;
+        _downloadPath = await FileService.GetDocumentPath(Document);
+        _fileExists = await FileService.FileExists(Document);
     }
 
-
-    private async Task DownloadFile()
-    {
-        try
-        {
-            var stream = await FileService.GetDocumentDownloadingStream(Document);
-            await JsRuntime.InvokeVoidAsync("downloadFileFromStream", $"{Document.Name} от {Document.DateCreated}", stream);
-        }
-        catch (Exception e)
-        {
-        }
-    }
-    
     private async Task LoadFile(InputFileChangeEventArgs e)
     {
         foreach (var file in e.GetMultipleFiles(e.FileCount))
         {
             await using Stream stream = file.OpenReadStream(20000000);
-            await FileService.AddDocument(Document, stream);
+            _downloadPath = await FileService.AddDocument(Document, stream);
+            _fileExists = await FileService.FileExists(Document);
+            StateHasChanged();
         }
     }
 

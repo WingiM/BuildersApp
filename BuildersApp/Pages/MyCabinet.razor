@@ -12,7 +12,7 @@
 @if (UserIdentityService.CurrentUser is not null)
 {
     var user = UserIdentityService.CurrentUser;
-    SetPersonalInfo(user);
+    SetPersonalInfo();
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">Login: @user.Login <br> Email: @user.Email</h5>
@@ -42,7 +42,7 @@
     private PersonalInfoBase _personalInfo;
     private EditContext _editContext;
 
-    private void SetPersonalInfo(User user)
+    private void SetPersonalInfo()
     {
         _personalInfo = UserIdentityService.CurrentUser.PersonalInfo;
         _editContext = new EditContext(_personalInfo);

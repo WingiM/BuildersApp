@@ -62,7 +62,7 @@
                 StateHasChanged();
             return;
         }
-        _projects = (await ProjectRepository.ListProjects(data!.IndustryType)).ToList();
+        _projects = (await ProjectRepository.ListProjects(data.IndustryType)).ToList();
         _projectsInitialized = true;
         if (_firstRender)
         {

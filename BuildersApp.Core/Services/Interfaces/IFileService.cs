@@ -4,6 +4,7 @@ namespace BuildersApp.Core.Services.Interfaces;
 
 public interface IFileService
 {
-    public Task AddDocument(Document document, Stream stream);
-    public Task<byte[]> GetDocumentDownloadingStream(Document document);
+    public Task<string> AddDocument(Document document, Stream stream);
+    public Task<bool> FileExists(Document document);
+    public Task<string> GetDocumentPath(Document document);
 }
