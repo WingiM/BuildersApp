@@ -1,0 +1,31 @@
+﻿@using BuildersApp.Core.Models.UserInfo
+@using BuildersApp.Core.Models
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Core.Services.Interfaces
+@using BuildersApp.Core.Enums
+@inject IFileService FileService;
+@inject IJSRuntime JsRuntime;
+@inject IProjectRepository ProjectRepository;
+<h3>ProjectDocumentsView</h3>
+
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    @foreach (var document in Project.Documents)
+    {
+        <DocumentComponent Document="document" UserRole="User.Role"/>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public User User { get; set; }
+
+    [Parameter]
+    public Project Project { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+}

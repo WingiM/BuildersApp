@@ -1,4 +1,5 @@
 ﻿using BuildersApp.Core.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
@@ -25,7 +26,7 @@ public class FileRepository : IFileRepository
 
     public async Task<bool> FileExistsAsync(string filename)
     {
-        var filter = Builders<GridFSFileInfo>.Filter.Where(x => x.Filename == filename);
-        return await (await _fileSystem.FindAsync(filter)).AnyAsync();
+        return (await _fileSystem.FindAsync(FilterDefinition<GridFSFileInfo<ObjectId>>.Empty)).ToEnumerable()
+            .FirstOrDefault(x => x.Filename == filename) is not null;
     }
 }

@@ -3,5 +3,5 @@
 [Serializable]
 public abstract class PersonalInfoBase
 {
-    public string Name { get; init; }
+    public string Name { get; set; }
 }

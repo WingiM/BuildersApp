@@ -1,0 +1,45 @@
+﻿@page "/projects/{id:int}"
+@using BuildersApp.Core.Models
+@using BuildersApp.Core.Models.UserInfo
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Core.Enums
+@using BuildersApp.Core.Services.Interfaces
+@inject NavigationManager NavigationManager
+@inject IProjectRepository ProjectRepository;
+@inject IUserIdentityService UserIdentityService;
+
+<h3>ViewProject</h3>
+
+@if (_user is not null)
+{
+    <ProjectDocumentsView User="_user" Project="_project"/>
+}
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private User? _user;
+
+    private Project _project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _project = await ProjectRepository.GetProject(Id, Roles.Customer);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        _user = UserIdentityService.CurrentUser;
+        if (_user is null || _user.Role != Roles.Customer)
+        {
+            NavigationManager.NavigateTo("/NotFound");
+        }
+        return Task.CompletedTask;
+    }
+
+
+
+}

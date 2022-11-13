@@ -7,7 +7,7 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu/>
+        <NavMenu @ref="@_navMenu"/>
     </div>
 
     <main>
@@ -15,7 +15,9 @@
         {
             var user = UserIdentityService.CurrentUser;
             <div class="top-row px-4">
-                <span>Hello, <NavLink href="/MyCabinet">@user.Email - @user.Role</NavLink></span>
+                <span>
+                    <NavLink href="/MyCabinet">@user.Email - @user.Role</NavLink>
+                </span>
             </div>
         }
 
@@ -27,6 +29,8 @@
 
 @code {
 
+    private NavMenu _navMenu;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -37,6 +41,7 @@
             }
             StateHasChanged();
         }
+        _navMenu.Update = true;
     }
 
 }

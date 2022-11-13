@@ -1,0 +1,64 @@
+﻿@page "/MyCabinet";
+
+<h3>MyCabinet</h3>
+@using IAuthorizationService = BuildersApp.Core.Services.Interfaces.IAuthorizationService
+@using BuildersApp.Core.Services.Interfaces
+@using BuildersApp.Core.Enums
+@using BuildersApp.Core.Models.UserInfo
+@using Microsoft.AspNetCore.Components
+@inject IUserIdentityService UserIdentityService
+@inject IAuthorizationService AuthorizationService;
+
+<h3>My Cabinet</h3>
+@if (UserIdentityService.CurrentUser is not null)
+{
+    var user = UserIdentityService.CurrentUser;
+    SetPersonalInfo(user);
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Login: @user.Login <br> Email: @user.Email</h5>
+        </div>
+        <EditForm EditContext="@_editContext" class="card-body">
+            @switch (user.Role)
+            {
+                case Roles.Customer:
+                    <InputRadioGroup @bind-Value="@(_personalInfo)">
+                        <InputRadio Value="@IndustryTypes.GasSupply"/><text>WaterSupply</text>
+                        <InputRadio Value="@IndustryTypes.WaterSupply"/><text>GasSupply</text>
+                    </InputRadioGroup>
+                    break;
+                case Roles.Designer:
+                    break;
+                case Roles.Developer:
+                    break;
+            }
+            <input type="submit" class="btn btn-primary btn-lg" value="Register"/>
+        </EditForm>
+        <div class="card-body">
+            <NavLink @onclick="_ => AuthorizationService.LogoutAsync()" href="/AuthorizationPage">Logout</NavLink>
+        </div>
+    </div>
+}
+
+@code {
+    private PersonalInfoBase _personalInfo;
+    private EditContext _editContext;
+
+    private void SetPersonalInfo(User user)
+    {
+        switch (user.Role)
+        {
+            case Roles.Customer:
+                _personalInfo = new CustomerPersonalInfo();
+                break;
+            case Roles.Developer:
+                _personalInfo = new DeveloperPersonalInfo();
+                break;
+            case Roles.Designer:
+                _personalInfo = new DesignerPersonalInfo();
+                break;
+        }
+        _editContext = new EditContext(_personalInfo);
+    }
+
+}

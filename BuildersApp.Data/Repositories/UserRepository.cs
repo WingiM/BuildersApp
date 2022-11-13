@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BuildersApp.Core.Enums;
+using BuildersApp.Core.Models;
 using BuildersApp.Core.Models.UserInfo;
 using BuildersApp.Core.Repositories;
 using BuildersApp.Data.Models;
@@ -29,6 +30,17 @@ public class UserRepository : IUserRepository
             PersonalInfo = userDb.GetData(), Email = userDb.Email, Id = userDb.Id,
             Login = userDb.Login, Role = (Roles)userDb.RoleId, PhoneNumber = userDb.PhoneNumber
         };
+    }
+
+    public async Task<IEnumerable<UserTuple>> GetUsersByRole(Roles role)
+    {
+        await using var session = _context.GetNpgsqlSession();
+        const string sql = @"SELECT id, data ->> 'Name' as ""Name"", role_id FROM ""user"" where role_id=@role_id";
+
+        var res = await session.QueryAsync<UserTuple>(sql, new { role_id = (int)role }) ??
+                     throw new Exception("Not found");
+
+        return res;
     }
 
     public async Task<bool> CreateUser(User user)

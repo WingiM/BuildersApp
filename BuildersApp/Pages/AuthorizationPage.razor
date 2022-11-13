@@ -9,7 +9,7 @@
 
 @if (UserIdentityService.CurrentUser is not null)
 {
-    NavigationManager.NavigateTo("/MainPage");
+    NavigationManager.NavigateTo("/");
 }
 
 <PageTitle>Authorization</PageTitle>
@@ -55,7 +55,7 @@
             return;
         }
         _isCorrectLogin = true;
-        NavigationManager.NavigateTo("/MainPage");
+        NavigationManager.NavigateTo("/");
     }
 
 

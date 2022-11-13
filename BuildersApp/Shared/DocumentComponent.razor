@@ -1,0 +1,76 @@
+﻿@using BuildersApp.Core.Models
+@using BuildersApp.Core.Enums
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Core.Services.Interfaces
+@inject IFileService FileService;
+@inject IJSRuntime JsRuntime;
+@inject IProjectRepository ProjectRepository;
+
+<div class="card" style="width: 18rem; margin: 5px;">
+    <div class="card-body">
+        <h5 class="card-title">@Document.Name</h5>
+        <p class="card-text">@Document.DateCreated.ToString("D")</p>
+        <p class="card-text">Sign date: @(Document.DateSigned == DateTime.MinValue ? "Not signed" : @Document.DateSigned.ToString("D"))</p>
+        @if (UserRole == Roles.Customer)
+        {
+            <input type="checkbox" value="Is signed" @bind="_signed"/> <text>Is signed</text> <br/>
+            <input type="checkbox" value="Is necessary" @bind="_necessary"/> <text>Is necessary</text> <br/>
+            <button class="btn btn-primary" @onclick="SaveChanges">Save changes</button> <br/>
+            <button class="btn btn-primary" @onclick="DownloadFile">Download file</button>
+        }
+        else
+        {
+            <InputFile OnChange="@LoadFile"/>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public Document Document { get; set; }
+
+    [Parameter]
+    public Roles UserRole { get; set; }
+
+    private bool _signed;
+    private bool _necessary;
+
+    protected override void OnInitialized()
+    {
+        _signed = Document.IsSigned;
+        _necessary = Document.IsNecessary;
+    }
+
+
+    private async Task DownloadFile()
+    {
+        try
+        {
+            await using var stream = await FileService.GetDocumentDownloadingStream(Document);
+            await JsRuntime.InvokeVoidAsync("downloadFileFromStream", $"{Document.Name} от {Document.DateCreated}", stream);
+        }
+        catch (Exception e)
+        {
+        }
+    }
+    
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(e.FileCount))
+        {
+            await using Stream stream = file.OpenReadStream(20000000);
+            await FileService.AddDocument(Document, stream);
+        }
+    }
+
+    private async Task SaveChanges()
+    {
+        Document.IsSigned = _signed;
+        Document.IsNecessary = _necessary;
+        await ProjectRepository.UpdateDocument(Document);
+        Document = await ProjectRepository.GetDocument(Document.Id);
+        StateHasChanged();
+    }
+
+}

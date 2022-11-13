@@ -1,0 +1,97 @@
+﻿@using BuildersApp.Core.Models.UserInfo
+@using BuildersApp.Core.Models
+@using BuildersApp.Core.Repositories
+@using BuildersApp.Core.Enums
+@inject IUserRepository UserRepository;
+@inject IProjectRepository ProjectRepository;
+<h3>CreateProject</h3>
+
+@if (_initialized)
+{
+    <EditForm Model="@_project" OnValidSubmit="@AddProject">
+        <DataAnnotationsValidator/>
+        <div class="form-outline flex-fill m-3">
+            <label class="form-label" for="form3Example1c">Project name</label>
+            <InputText @bind-Value="@_project.Name" type="text" id="form3Example1c" class="form-control"/>
+            <ValidationMessage For="() => _project.Name"/>
+        </div>
+        <div class="form-outline flex-fill m-3">
+            <label class="form-label">Industry type: @_project.IndustryType</label>
+        </div>
+        <div class="form-outline flex-fill m-3">
+            <label class="form-label" for="form3Example2c">Developer</label>
+            <InputSelect @bind-Value="@_project.DeveloperId" id="form3Example2c" class="form-control">
+                @foreach (var dev in _developers)
+                {
+                    <option value="@dev.Id">@dev.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="() => _project.Developer"/>
+        </div>
+        <div class="form-outline flex-fill m-3">
+            <label class="form-label" for="form3Example3c">Designer</label>
+            <InputSelect @bind-Value="@_project.DesignerId" id="form3Example3c" class="form-control">
+                @foreach (var des in _designers)
+                {
+                    <option value="@des.Id">@des.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="() => _project.Designer"/>
+        </div>
+
+        <ValidationSummary hidden="@(!_buttonPressed)"/>
+        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+            <input type="submit" @onclick="() => _buttonPressed = true" class="btn btn-primary btn-lg" value="Register"/>
+        </div>
+
+        @if (_successfullyAdded)
+        {
+            <div class="alert alert-success" role="alert">
+                Added successfully
+            </div>
+        }
+    </EditForm>
+}
+
+@code {
+
+    [Parameter]
+    public User Customer { get; set; }
+
+    private bool _initialized;
+    private bool _buttonPressed;
+    private bool _successfullyAdded;
+
+    private List<UserTuple> _developers;
+    private List<UserTuple> _designers;
+
+    private Project _project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CreateNewProject();
+        _developers = (await UserRepository.GetUsersByRole(Roles.Developer)).ToList();
+        _designers = (await UserRepository.GetUsersByRole(Roles.Designer)).ToList();
+        _initialized = true;
+        StateHasChanged();
+    }
+
+    private async Task AddProject()
+    {
+        await ProjectRepository.CreateProject(_project);
+        CreateNewProject();
+        _successfullyAdded = true;
+        await Task.Delay(1000);
+        _successfullyAdded = false;
+    }
+
+    private void CreateNewProject()
+    {
+        _project = new()
+        {
+            IndustryType = (Customer.PersonalInfo as CustomerPersonalInfo)!.IndustryType,
+            CreatedById = Customer.Id
+        };
+    }
+
+}

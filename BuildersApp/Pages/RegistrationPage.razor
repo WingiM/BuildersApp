@@ -13,7 +13,7 @@
 <h3>RegistrationPage</h3>
 @if (UserIdentityService.CurrentUser is not null)
 {
-    NavigationManager.NavigateTo("/MainPage");
+    NavigationManager.NavigateTo("/");
 }
 <section class="vh-100">
     <div class="container h-100">
@@ -26,12 +26,13 @@
 
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                                <EditForm Model="@_user" OnValidSubmit="@Register" class="mx-1 mx-md-4">
-
+                                <EditForm OnValidSubmit="@Register" EditContext="@_editContext" class="mx-1 mx-md-4">
+                                    <DataAnnotationsValidator/>
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <InputText @bind-Value="@_user.Login" type="text" id="form3Example1c" class="form-control"/>
+                                            <ValidationMessage For="() => _user.Login"/>
                                             <label class="form-label" for="form3Example1c">Your login</label>
                                         </div>
                                     </div>
@@ -40,6 +41,7 @@
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <InputText @bind-Value="@_user.Email" type="text" id="form3Example1c" class="form-control"/>
+                                            <ValidationMessage For="() => _user.Email"/>
                                             <label class="form-label" for="form3Example1c">Your email</label>
                                         </div>
                                     </div>
@@ -48,6 +50,7 @@
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <InputText @bind-Value="@_user.PhoneNumber" type="text" id="form3Example1c" class="form-control"/>
+                                            <ValidationMessage For="() => _user.PhoneNumber"/>
                                             <label class="form-label" for="form3Example1c">Your phone number</label>
                                         </div>
                                     </div>
@@ -55,16 +58,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
-                                            <InputText @bind-Value="@_user.Email" type="email" id="form3Example3c" class="form-control"/>
-                                            <label class="form-label" for="form3Example3c">Your Email</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="d-flex flex-row align-items-center mb-4">
-                                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <label class="form-label" for="form3Example3c">Your Role</label>
+                                            <label class="form-label" for="form3Example3c">Your Role</label> <br>
                                             <InputRadioGroup @bind-Value="@_user.Role" class="form-control">
                                                 <InputRadio Value="@Roles.Customer"/> <text>@Roles.Customer</text> <br>
                                                 <InputRadio Value="@Roles.Developer"/> <text>@Roles.Developer</text><br>
@@ -89,8 +83,9 @@
                                         </div>
                                     </div>
 
+                                    <ValidationSummary hidden="@(!_regButtonPressed)"/>
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                        <input type="submit" class="btn btn-primary btn-lg" value="Register"/>
+                                        <input type="submit" @onclick="() => _regButtonPressed=true" class="btn btn-primary btn-lg" value="Register"/>
                                     </div>
 
                                 </EditForm>
@@ -128,11 +123,19 @@
     private readonly User _user = new();
     private string? _password;
     private string? _repeatpassword;
+    private bool _regButtonPressed;
     private bool _isExistingUser;
     private bool _passwordsAreEqual = true;
+    private EditContext? _editContext;
+
+    protected override void OnInitialized()
+    {
+        _editContext = new(_user);
+    }
 
     private async Task Register()
     {
+        _regButtonPressed = true;
         if (_password is null)
             return;
 
