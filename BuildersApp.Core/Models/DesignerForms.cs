@@ -1,4 +1,7 @@
-﻿namespace BuildersApp.Core.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace BuildersApp.Core.Models;
 
 public class BaseDesignerForm
 {

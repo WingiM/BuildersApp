@@ -120,7 +120,7 @@ public class ProjectRepository : IProjectRepository
         var parameters = new DynamicParameters();
 
         var sql = @"SELECT is_signed FROM project_document WHERE id=@documentId";
-        var existingDocumentSigned = await session.QuerySingleAsync<bool>(sql, new { documentId = document.Id });
+        var existingDocumentSigned = await session.QuerySingleOrDefaultAsync<bool>(sql, new { documentId = document.Id });
 
         sql = "UPDATE project_document SET ";
         if (!existingDocumentSigned && document.IsSigned)
@@ -167,11 +167,51 @@ public class ProjectRepository : IProjectRepository
 
     public async Task<BaseDesignerForm?> GetForm(int projectId)
     {
-        return await (await _forms.FindAsync(x => x.ProjectId == projectId)).SingleOrDefaultAsync();
+        await using var session = _context.GetNpgsqlSession();
+        var sql = "SELECT industry_id FROM project where id=@projectId";
+        var industry = await session.ExecuteScalarAsync<int>(sql, new { projectId });
+        if (industry == (int)IndustryTypes.GasSupply)
+        {
+            return await session.QuerySingleOrDefaultAsync<GasForm>("SELECT * FROM gas_form WHERE project_id=@projectId",
+                new { projectId });
+        }
+
+        return await session.QuerySingleOrDefaultAsync<WaterForm>("SELECT * FROM water_form WHERE project_id=@projectId",
+            new { projectId });
     }
 
-    public async Task AddForm(BaseDesignerForm gasForm)
+    public async Task AddForm(BaseDesignerForm form)
     {
-        await _forms.InsertOneAsync(gasForm);
+        await using var session = _context.GetNpgsqlSession();
+        string sql;
+        switch (form)
+        {
+            case GasForm gas:
+                await session.ExecuteAsync("DELETE FROM gas_form WHERE project_id=@projectId",
+                    new { projectId = gas.ProjectId });
+                sql =
+                    @"INSERT INTO gas_form(diameter, diameter2, cost, duration, project_id) VALUES (@diameter, @diameter2, @cost, @duration, @projectId)";
+                await session.ExecuteAsync(sql,
+                    new
+                    {
+                        diameter = gas.Diameter, diameter2 = gas.Diameter2, cost = gas.Cost, duration = gas.Duration,
+                        projectId = gas.ProjectId
+                    });
+                break;
+            case WaterForm water:
+                await session.ExecuteAsync("DELETE FROM gas_form WHERE project_id=@projectId",
+                    new { projectId = water.ProjectId });
+
+                sql =
+                    @"INSERT INTO water_form(diameter, performance, kns, cost, duration, project_id) VALUES (@diameter, @performance, @kns, @cost, @duration, @projectId)";
+                await session.ExecuteAsync(sql,
+                    new
+                    {
+                        diameter = water.Diameter, performance = water.Performance, kns = water.KNS, cost = water.Cost,
+                        duration = water.Duration,
+                        projectId = water.ProjectId
+                    });
+                break;
+        }
     }
 }

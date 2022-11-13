@@ -3,7 +3,7 @@
 @inject IProjectRepository ProjectRepository
 <h3>Water form</h3>
 
-<EditForm Model="_waterForm" OnValidSubmit="AddForm">
+<EditForm Model="_waterForm" OnValidSubmit="@AddForm">
 
     <table class="table table-bordered">
         <tr>
@@ -63,6 +63,7 @@
     protected override async Task OnInitializedAsync()
     {
         _waterForm = (Core.Models.WaterForm)(await ProjectRepository.GetForm(ProjectId) ?? new Core.Models.WaterForm());
+        _waterForm.ProjectId = ProjectId;
     }
 
     private async Task AddForm()

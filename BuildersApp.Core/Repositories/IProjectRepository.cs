@@ -14,5 +14,5 @@ public interface IProjectRepository
     public Task<bool> CreateProject(Project project);
     public Task AddDocumentToProject(int projectId, int documentId);
     public Task<BaseDesignerForm?> GetForm(int projectId);
-    public Task AddForm(BaseDesignerForm gasForm);
+    public Task AddForm(BaseDesignerForm form);
 }
