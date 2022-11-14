@@ -19,7 +19,7 @@
             <input type="checkbox" value="Is necessary" @bind="_necessary"/>
             <text>Is necessary</text>
             <br/>
-            <button class="btn btn-primary" @onclick="SaveChanges">Save changes</button>
+            <button class="btn btn-primary mb-2 mt-2" @onclick="SaveChanges">Save changes</button>
             <br/>
         }
         else
@@ -30,7 +30,7 @@
             <input type="checkbox" disabled value="Is necessary" @bind="_necessary"/>
             <text>Is necessary</text>
             <br/>
-            <InputFile OnChange="@LoadFile" accept=".pdf"/>
+            <InputFile class="form-control" OnChange="@LoadFile" accept=".pdf"/>
         }
         @if (!_fileExists)
         {

@@ -2,7 +2,7 @@
 @using BuildersApp.Core.Repositories
 @using BuildersApp.Core.Enums
 @inject IProjectRepository ProjectRepository;
-<h3>AddDocument</h3>
+<h3 class="mt-2">AddDocument</h3>
 
 @if (_documentsInitialized)
 {
@@ -16,7 +16,7 @@
         </InputSelect>
         <ValidationSummary/>
         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-            <input type="submit" class="btn btn-primary btn-lg" value="Add"/>
+            <input type="submit" class="btn btn-primary btn-lg mt-2" value="Add"/>
         </div>
 
         @if (_successfullyAdded)

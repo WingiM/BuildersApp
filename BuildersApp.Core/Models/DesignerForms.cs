@@ -1,11 +1,9 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace BuildersApp.Core.Models;
+﻿namespace BuildersApp.Core.Models;
 
 public class BaseDesignerForm
 {
     public int ProjectId { get; set; }
+    public bool IsSigned { get; set; }
 }
 
 public class WaterForm : BaseDesignerForm

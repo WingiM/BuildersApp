@@ -8,7 +8,6 @@
 @inject IUserIdentityService UserIdentityService
 @inject IAuthorizationService AuthorizationService;
 
-<h3>My Cabinet</h3>
 @if (UserIdentityService.CurrentUser is not null)
 {
     var user = UserIdentityService.CurrentUser;
