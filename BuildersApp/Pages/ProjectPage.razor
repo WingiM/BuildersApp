@@ -28,6 +28,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (UserIdentityService.CurrentUser is null)
+            return;
         _projects = (await ProjectRepository.ListProjects(UserIdentityService.CurrentUser.Role, UserIdentityService.CurrentUser.Id)).ToList();
         _projectsInitialized = true;
     }
