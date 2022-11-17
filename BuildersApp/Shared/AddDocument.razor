@@ -54,6 +54,7 @@
         await ProjectRepository.AddDocumentToProject(Project.Id, document.DocumentId);
         document = new();
         _successfullyAdded = true;
+        await OnInitializedAsync();
         StateHasChanged();
         await Task.Delay(1000);
         _successfullyAdded = false;

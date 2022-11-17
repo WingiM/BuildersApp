@@ -148,13 +148,22 @@ public class ProjectRepository : IProjectRepository
         var sql = @"INSERT INTO project(name, industry_id, designer_id, developer_id, created_by) 
                     VALUES (@name, @industry_id, @designer_id, @developer_id, @created_by) returning id";
 
-        await session.ExecuteAsync(sql,
+        var projectId = await session.ExecuteScalarAsync<int>(sql,
             new
             {
                 name = project.Name, industry_id = (int)project.IndustryType,
                 designer_id = project.DesignerId, developer_id = project.DeveloperId,
                 date_created = project.DateCreated, created_by = project.CreatedById
             });
+        // sql = @"SELECT id FROM document WHERE industry_id in (@industryId, 1)";
+        // var documentList = (await session.QueryAsync<int>(sql,
+        //         new { industryId = (int)project.IndustryType }))
+        //     .ToList()
+        //     .Select(x => new { projectId, documentId = x, dateCreated = DateTime.Now });
+        // sql = @"INSERT INTO project_document(project_id, document_id, date_created) 
+        //             VALUES (@projectId, @documentId, @dateCreated)";
+        //
+        // await session.ExecuteAsync(sql, documentList);
 
         return true;
     }
