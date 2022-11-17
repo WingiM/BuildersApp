@@ -3,9 +3,9 @@
 
 <EditForm Model="@_customer">
     <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">Name</label>
         <InputText @bind-Value="@_customer.Name" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _customer.Name"/>
-        <label class="form-label" for="form3Example1c">Name</label>
     </div>
     <div class="form-outline flex-fill mb-2">
         <label class="form-label" for="form3Example3c">Your industry type</label> <br>
@@ -15,9 +15,9 @@
         </InputRadioGroup>
     </div>
     <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">Department</label>
         <InputText @bind-Value="@_customer.Department" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _customer.Department"/>
-        <label class="form-label" for="form3Example1c">Department</label>
     </div>
 </EditForm>
 

@@ -2,35 +2,35 @@
 <EditForm Model="@_developer">
     <DataAnnotationsValidator/>
 
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">Name</label>
         <InputText @bind-Value="@_developer.Name" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.Name"/>
-        <label class="form-label" for="form3Example1c">Name</label>
     </div>
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">TIN</label>
         <InputText @bind-Value="@_developer.Tin" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.Tin"/>
-        <label class="form-label" for="form3Example1c">TIN</label>
     </div>
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">OGRN</label>
         <InputText @bind-Value="@_developer.Ogrn" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.Ogrn"/>
-        <label class="form-label" for="form3Example1c">OGRN</label>
     </div>
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">KPP</label>
         <InputText @bind-Value="@_developer.Kpp" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.Kpp"/>
-        <label class="form-label" for="form3Example1c">KPP</label>
     </div>
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">Address</label>
         <InputText @bind-Value="@_developer.Address" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.Address"/>
-        <label class="form-label" for="form3Example1c">Address</label>
     </div>
-    <div class="form-outline flex-fill mb-0">
+    <div class="form-outline flex-fill mb-2">
+        <label class="form-label" for="form3Example1c">Executive director</label>
         <InputText @bind-Value="@_developer.ExecutiveDirector" type="text" id="form3Example1c" class="form-control"/>
         <ValidationMessage For="() => _developer.ExecutiveDirector"/>
-        <label class="form-label" for="form3Example1c">Executive director</label>
     </div>
 
     <ValidationSummary/>
